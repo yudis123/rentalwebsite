@@ -53,7 +53,31 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+// Mode dipilih otomatis:
+//   - CI_ENV dari server (SetEnv di .htaccess / variabel lingkungan) selalu diutamakan.
+//   - Komputer lokal (CLI, localhost, 127.0.0.1, ::1, *.test, *.local) = development.
+//   - Alamat lain (hosting) = production.
+if ( ! empty($_SERVER['CI_ENV']))
+{
+	$_env = $_SERVER['CI_ENV'];
+}
+elseif (PHP_SAPI === 'cli')
+{
+	$_env = 'development';
+}
+else
+{
+	$_host = strtolower(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+	$_host = preg_replace('/:\d+$/', '', trim($_host, '[]'));
+	$_host = trim($_host, '[]');
+	$_env  = (in_array($_host, array('localhost', '127.0.0.1', '::1'), TRUE)
+		|| preg_match('/\.(test|local|localhost)$/', $_host))
+		? 'development'
+		: 'production';
+	unset($_host);
+}
+	define('ENVIRONMENT', $_env);
+	unset($_env);
 
 /*
  *---------------------------------------------------------------
@@ -73,14 +97,8 @@ switch (ENVIRONMENT)
 	case 'testing':
 	case 'production':
 		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
+		// 2048 = E_STRICT (konstanta usang sejak PHP 8.4, ditulis sebagai angka)
+		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~2048 & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
 	break;
 
 	default:

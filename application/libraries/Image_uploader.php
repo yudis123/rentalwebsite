@@ -123,7 +123,7 @@ class Image_uploader {
 
 				if ($rotated)
 				{
-					imagedestroy($image);
+					$this->free($image);
 					$image = $rotated;
 				}
 			}
@@ -158,7 +158,7 @@ class Image_uploader {
 
 			if ($scaled)
 			{
-				imagedestroy($image);
+				$this->free($image);
 				$image = $scaled;
 			}
 		}
@@ -179,7 +179,7 @@ class Image_uploader {
 				$ok = imagejpeg($image, $target, 85);
 		}
 
-		imagedestroy($image);
+		$this->free($image);
 
 		return (bool) $ok;
 	}
@@ -189,5 +189,17 @@ class Image_uploader {
 		$this->error = $message;
 
 		return FALSE;
+	}
+
+	/**
+	 * Lepas memori gambar. Sejak PHP 8.0 gambar GD dibebaskan otomatis,
+	 * dan imagedestroy() usang sejak PHP 8.5.
+	 */
+	private function free($image)
+	{
+		if (PHP_VERSION_ID < 80000)
+		{
+			imagedestroy($image);
+		}
 	}
 }

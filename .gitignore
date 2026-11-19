@@ -1,5 +1,7 @@
 node_modules/
 deploy/
+# Password database di server, dibuat manual di hosting
+application/config/production/database.local.php
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
