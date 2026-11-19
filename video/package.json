@@ -1,0 +1,24 @@
+{
+  "name": "rentcar-promo-video",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Video promosi RentCar: klip layar ponsel dirender HyperFrames, video akhir disusun Remotion.",
+  "scripts": {
+    "data": "php scripts/export-data.php",
+    "screen": "cd hf-screen && hyperframes render -o ../public/screen.mp4 --fps 30 --workers 2 --quiet",
+    "studio": "remotion studio src/index.jsx",
+    "video": "remotion render src/index.jsx Promo out/promo-rentcar-9x16.mp4 --codec h264 --crf 18 --color-space bt709 --concurrency 2",
+    "build": "npm run data && npm run screen && npm run video"
+  },
+  "dependencies": {
+    "@fontsource/plus-jakarta-sans": "^5.2.8",
+    "@remotion/bundler": "4.0.545",
+    "@remotion/cli": "4.0.545",
+    "@remotion/renderer": "4.0.545",
+    "gsap": "3.15.0",
+    "hyperframes": "0.9.69",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.545"
+  }
+}

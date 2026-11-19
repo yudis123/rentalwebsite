@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jangan izinkan akses langsung ke folder inti
+    RewriteRule ^(application|system|database|node_modules|video|deploy)(/|$) - [F,L]
+
+    # Arahkan semua permintaan yang bukan file/folder nyata ke index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>

@@ -1,0 +1,12 @@
+node_modules/
+deploy/
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+application/sessions/*
+!application/sessions/.htaccess
+assets/uploads/*
+!assets/uploads/.htaccess
